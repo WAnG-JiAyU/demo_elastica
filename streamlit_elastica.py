@@ -100,8 +100,19 @@ $$x(0) = y(0) = y(L) =0 \qquad   x(L) = L - \Delta \qquad \theta(0) = \theta(L) 
 """
 
 with st.expander("Dimentionless system"):
-    st.markdown(r"""When doing numerical calculation, the system is adimentionlize by length scale $L$ and force scale $EI/L^2$.""")
-
+    st.markdown(r"""When doing numerical calculation, the system is adimentionlize by length scale $L$ and force scale $EI/L^2$. As a result, the system to solve is actually:
+    	""")
+    st.latex(r'''
+    	\begin{align*}
+    	& EI\theta''(s) = N_x \sin{\theta(s)} - N_y \cos{\theta(s)}\\
+    	& x'(s) = \cos{\theta}(s)\\
+    	& y'(s) = \sin{\theta}(s) \qquad s\in [0, 1]
+    	\end{align*}
+    	''')
+    'with boundary conditions : '
+    st.latex(r'''
+    	x(0) = y(0) = y(1) =0 \qquad   x(L) = 1 - \Delta \qquad \theta(0) = \theta(1) = 0
+    	''')
 
 
 """
@@ -110,14 +121,15 @@ with st.expander("Dimentionless system"):
 st.header("Solving methods")
 st.markdown(r"""
 
-With the help of Python library `scipy`, 2 methods are implemented to solve the differential equations above:
+This is a non-linear system, difficult to find an analytical solution. Apart from non-linearity, the problem does not have an unique solution, which adds additional complexity. With the help of Python library `scipy`, 2 methods are implemented to numerically solve the differential equations above:
 
-1. bvp solver: using `scipy.integrate.solve_bvp` to solve the system of differential equations as a boundary value problem.
-2. shoting method + ivp solver: using `solve_ivp` and `scipy.optimize.root` to find appropriate values for $\left.\frac{d\, \theta(s)}{d\,s}\right|_{s=0}$, $N_x$ and $N_y$ such that solving the equations as an initial value problem gives a solution which satisfies the boundary condition at the other end ($s=L$).
+1. **bvp solver:** using `scipy.integrate.solve_bvp` to solve the system of differential equations as a boundary value problem. `solve_bvp` needs values over the whole beam to define initial state.
+2. **shoting method + ivp solver:** using `solve_ivp` and `scipy.optimize.root` to find appropriate values for $\left.\frac{d\, \theta(s)}{d\,s}\right|_{s=0}$, $N_x$ and $N_y$ such that solving the equations as an initial value problem gives a solution which satisfies the boundary condition at the other end ($s=L$). Compared to the previous method, this method only needs 3 values, $d\theta(0)/ds$, $N_x$ and $N_y$, as initialization.
 
 
-### Remarks 
-Both `solve_bvp` and `minimize` need values over the whole beam to define initial state, whereas `root` +`solve_ivp` only needs 3 values: $d\theta(0)/ds$, $N_x$ and $N_y$.
+**_Remarks_:**
+
+Although we have the great python package `scipy` for numerical solving, the initialization is very important for convergence. To calculate solution for large $\Delta$, we use [**_numerical continuation method_**](https://en.wikipedia.org/wiki/Numerical_continuation), starting with small $\Delta$, initializing with the analytical solution of linearized system, then use that converged result for a larger $\Delta$. This process is continuously carried out for even larger $\Delta$.
 """)
 
 
@@ -126,6 +138,15 @@ Both `solve_bvp` and `minimize` need values over the whole beam to define initia
 
 
 st.header("Numerical solving results")
+
+st.markdown(r"""
+	&nbsp;&nbsp;&nbsp;&nbsp; Below we show on the left the bifurcation curves in _global representation space_ (GRS) $(N_x, N_y, \frac{d\theta}{ds}|_0)$ and on the right the form of the beam on GRS marked by the red point.
+
+	&nbsp;&nbsp;&nbsp;&nbsp; For initialization, the first and second buckling modes of a clamped-clamped beam is used. Choose from the left to see results on the branches initialized by the first or second mode. 
+
+	&nbsp;&nbsp;&nbsp;&nbsp; Apart from these two branches, there is a particular branch linking them, we call it _mode 1/2_. This branch is found by **_arc-length continuation_**, which is also a type of continuation method.
+""")
+
 
 with st.sidebar:
 	st.write("Select a specific mode : ")
