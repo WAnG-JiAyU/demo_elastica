@@ -33,7 +33,7 @@ def sys_equ(s, var, nx, ny):
 def load_data(url):
 	bvp_mode1 = pd.read_csv("%s/solve_bvp_data_mode1.csv"%url)
 	bvp_mode2 = pd.read_csv("%s/solve_bvp_data_mode2.csv"%url)
-	mode12_bvp = pd.read_csv("%s/Data_mode12_bvp.csv"%url)
+	mode12_bvp = pd.read_csv("%s/data_mode12_bvp.csv"%url)
 	return bvp_mode1, bvp_mode2, mode12_bvp
 
 bvp_mode1, bvp_mode2, mode12_bvp = load_data("Data")
