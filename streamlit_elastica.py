@@ -36,8 +36,7 @@ def load_data(url):
 	mode12_bvp = pd.read_csv("%s/Data_mode12_bvp.csv"%url)
 	return bvp_mode1, bvp_mode2, mode12_bvp
 
-
-bvp_mode1, bvp_mode2, mode12_bvp = load_data("https://github.com/WAnG-JiAyU/demo_elastica/tree/master/Data")
+bvp_mode1, bvp_mode2, mode12_bvp = load_data("https://github.com/WAnG-JiAyU/demo_elastica/blob/b13ef20b0cb1e0c9626e372da8dfe5ac6db0345c/Data")
 
 z1 = np.concatenate((np.flip(bvp_mode1.dtheta0.values), -bvp_mode1.dtheta0.values), axis=None)
 x1 = np.concatenate((np.flip(bvp_mode1.Nx.values), bvp_mode1.Nx.values), axis=None)
