@@ -37,7 +37,7 @@ def load_data(url):
 	return bvp_mode1, bvp_mode2, mode12_bvp
 
 
-bvp_mode1, bvp_mode2, mode12_bvp = load_data("./Data")
+bvp_mode1, bvp_mode2, mode12_bvp = load_data("https://github.com/WAnG-JiAyU/demo_elastica/tree/master/Data")
 
 z1 = np.concatenate((np.flip(bvp_mode1.dtheta0.values), -bvp_mode1.dtheta0.values), axis=None)
 x1 = np.concatenate((np.flip(bvp_mode1.Nx.values), bvp_mode1.Nx.values), axis=None)
