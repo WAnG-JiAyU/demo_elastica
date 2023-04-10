@@ -124,7 +124,7 @@ st.markdown(r"""
 This is a non-linear system, difficult to find an analytical solution. Apart from non-linearity, the problem does not have an unique solution, which adds additional complexity. With the help of Python library `scipy`, 2 methods are implemented to numerically solve the differential equations above:
 
 1. **bvp solver:** using `scipy.integrate.solve_bvp` to solve the system of differential equations as a boundary value problem. `solve_bvp` needs values over the whole beam to define initial state.
-2. **shoting method + ivp solver:** using `solve_ivp` and `scipy.optimize.root` to find appropriate values for $\left.\frac{d\, \theta(s)}{d\,s}\right|_{s=0}$, $N_x$ and $N_y$ such that solving the equations as an initial value problem gives a solution which satisfies the boundary condition at the other end ($s=L$). Compared to the previous method, this method only needs 3 values, $d\theta(0)/ds$, $N_x$ and $N_y$, as initialization.
+2. **shoting method + ivp solver:** using `solve_ivp` and `scipy.optimize.root` to find appropriate values for $\left.\frac{d\, \theta}{d\,s}\right|_{s=0}$, $N_x$ and $N_y$ such that solving the equations as an initial value problem (IVP) gives a solution which satisfies the boundary condition at the other end ($s=L$). Compared to the previous method, this method only needs 3 values, $\left.\frac{d\, \theta}{d\,s}\right|_{s=0}$, $N_x$ and $N_y$, for initialization.
 
 
 **_Remarks_:**
@@ -142,26 +142,26 @@ st.header("Numerical solving results")
 st.markdown(r"""
 	&nbsp;&nbsp;&nbsp;&nbsp; Below we show on the left the bifurcation curves in _global representation space_ (GRS) $(N_x, N_y, \frac{d\theta}{ds}|_0)$ and on the right the form of the beam on GRS marked by the red point.
 
-	&nbsp;&nbsp;&nbsp;&nbsp; For initialization, the first and second buckling modes of a clamped-clamped beam is used. Choose from the left to see results on the branches initialized by the first or second mode. 
+	&nbsp;&nbsp;&nbsp;&nbsp; For initialization, the first and second buckling modes of a clamped-clamped beam is used. Choose 'Mode1' or 'Mode2' below to see results on the branches initialized by the first or second mode. 
 
-	&nbsp;&nbsp;&nbsp;&nbsp; Apart from these two branches, there is a particular branch linking them, we call it _mode 1/2_. This branch is found by **_arc-length continuation_**, which is also a type of continuation method.
+	&nbsp;&nbsp;&nbsp;&nbsp; Apart from these two branches, there is a particular branch linking them, we call it _mode 1/2_. This branch is found by **_arc-length continuation_**, which is also a type of continuation method. Choose 'Mode1/2' to see the evolution of this mode.
 """)
 
 
-with st.sidebar:
-	st.write("Select a specific mode : ")
-	#create a selectbox option that choose mode
-	selected_mode = st.selectbox(' ', ['Mode1', 'Mode2', 'Mode1/2'], 0)
-
+# with st.sidebar:
+# 	st.write("Select a specific mode : ")
+# 	#create a selectbox option that choose mode
+# 	selected_mode = st.selectbox(' ', ['Mode1', 'Mode2', 'Mode1/2'], 0)
+selected_mode = st.selectbox('Select a specific mode : ', ['Mode1', 'Mode2', 'Mode1/2'], 0)
 if selected_mode == 'Mode1':
 	new_delta_value = st.slider(label = "Delta: ",
-		min_value = 0.0001, max_value = 1.45, value = 0.1)
+		min_value = 0.0001, max_value = 1.45, value = 0.0001)
 	point_mode = bvp_mode1.iloc[(bvp_mode1['delta'] - new_delta_value).abs().argsort()[0]]
 	ax2.set_title("Form of the beam - mode1")
 
 elif selected_mode == 'Mode2':
 	new_delta_value = st.slider(label = "Delta: ",
-		min_value = 0.0001, max_value = 1.45, value = 0.1)
+		min_value = 0.0001, max_value = 1.45, value = 0.0001)
 	point_mode = bvp_mode2.iloc[(bvp_mode2['delta'] - new_delta_value).abs().argsort()[0]]
 	ax2.set_title("Form of the beam - mode2")
 
